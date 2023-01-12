@@ -20,11 +20,42 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+// http://localhost:5050/api/ endpoint
+app.get("/api/", (req, res) => {
+  let unix = Date.now()
+  let utc = new Date(unix).toUTCString()
+  res.json({"unix" : `${unix}`, "utc": `${utc}`})
+})
 
+// http://localhost:5050/api/:date endpoint
+app.get("/api/:date", (req, res) => {  
+  const dateString = req.params.date
 
+  // Handling a Unix timestamp input
+  if(/^\d+$/.test(dateString)) {
+    let date = new Date(Number(dateString))
+    res.json({"unix": dateString, utc: date.toUTCString()})
+    return;
+  }
+
+  // Hnadling a date input
+  // Formatting input date string if needed 
+  let regex = /([ -//])(\d)([ -//])/
+  let regex2 = /([ -//])(\d)$/
+  let formattedDate = dateString.replace(regex, '$10$2$3').replace(regex2, '$10$2')
+  let date = new Date((formattedDate))
+
+  // Returing error json object if input data isinvalid
+  if ( date == "Invalid Date" ) {
+    res.json({ "error" : "Invalid Date" })
+    return;
+  }
+
+  // Returning responce
+  const unix = Date.parse(date)
+  const utc = date.toUTCString()
+  res.json({"unix" : `${unix}`, "utc": `${utc}`})
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
