@@ -22,9 +22,9 @@ app.get("/", function (req, res) {
 // your first API endpoint... 
 // http://localhost:5050/api/ endpoint
 app.get("/api/", (req, res) => {
-  let unix = Date.now()
+  let unix = Number(Date.now())
   let utc = new Date(unix).toUTCString()
-  res.json({"unix" : `${unix}`, "utc": `${utc}`})
+  res.json({"unix" : unix, "utc": utc})
 })
 
 // http://localhost:5050/api/:date endpoint
@@ -34,7 +34,7 @@ app.get("/api/:date", (req, res) => {
   // Handling a Unix timestamp input
   if(/^\d+$/.test(dateString)) {
     let date = new Date(Number(dateString))
-    res.json({"unix": dateString, utc: date.toUTCString()})
+    res.json({"unix": Nuber(dateString), utc: date.toUTCString()})
     return;
   }
 
@@ -54,7 +54,7 @@ app.get("/api/:date", (req, res) => {
   // Returning responce
   const unix = Date.parse(date)
   const utc = date.toUTCString()
-  res.json({"unix" : `${unix}`, "utc": `${utc}`})
+  res.json({"unix" : Number(unix), "utc": utc})
 })
 
 // listen for requests :)
